@@ -17,6 +17,8 @@ import (
 var (
 	_ sdk.Tx             = (*StdTx)(nil)
 	_ codectypes.IntoAny = (*StdTx)(nil)
+	_ sdk.TxWithMemo     = (*StdTx)(nil)
+	_ sdk.FeeTx          = (*StdTx)(nil)
 )
 
 // Deprecated: StdFee includes the amount of coins paid in fees and the maximum

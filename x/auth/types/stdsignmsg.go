@@ -22,7 +22,7 @@ type StdSignMsg struct {
 
 // get message bytes
 func (msg StdSignMsg) Bytes() []byte {
-	return StdSignBytes(msg.ChainID, msg.AccountNumber, msg.Sequence, msg.TimeoutHeight, msg.Fee, msg.Msgs, msg.Memo)
+	return legacytx.StdSignBytes(msg.ChainID, msg.AccountNumber, msg.Sequence, msg.TimeoutHeight, msg.Fee, msg.Msgs, msg.Memo)
 }
 
 func (msg StdSignMsg) UnpackInterfaces(unpacker types.AnyUnpacker) error {

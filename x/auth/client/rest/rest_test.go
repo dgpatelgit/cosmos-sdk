@@ -13,7 +13,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	rest2 "github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
@@ -84,7 +83,7 @@ func (s *IntegrationTestSuite) TestEncodeDecode() {
 	var decodeResp rest2.DecodeResp
 	err = cdc.UnmarshalJSON(respWithHeight.Result, &decodeResp)
 	require.NoError(err)
-	require.Equal(stdTx, authtypes.StdTx(decodeResp))
+	require.Equal(stdTx, legacytx.StdTx(decodeResp))
 }
 
 func (s *IntegrationTestSuite) TestBroadcastTxRequest() {

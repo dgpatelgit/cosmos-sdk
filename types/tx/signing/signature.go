@@ -3,8 +3,6 @@ package signing
 import (
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	"github.com/tendermint/tendermint/crypto"
 )
 
@@ -99,25 +97,4 @@ func SignatureDataFromProto(descData *SignatureDescriptor_Data) SignatureData {
 	default:
 		panic(fmt.Errorf("unexpected case %+v", descData))
 	}
-}
-
-// SignatureV2ToStdSignature converts a SignatureV2 to a StdSignature
-// [Deprecated]
-func (sig SignatureV2) ToStdSignature(cdc *codec.LegacyAmino) (legacytx.StdSignature, error) {
-	var (
-		sigBz []byte
-		err   error
-	)
-
-	if sig.Data != nil {
-		sigBz, err = legacytx.SignatureDataToAminoSignature(cdc, sig.Data)
-		if err != nil {
-			return legacytx.StdSignature{}, err
-		}
-	}
-
-	return legacytx.StdSignature{
-		PubKey:    sig.PubKey,
-		Signature: sigBz,
-	}, nil
 }
