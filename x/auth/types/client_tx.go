@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
+	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 )
 
@@ -33,15 +34,13 @@ func (s *StdTxBuilder) SetMsgs(msgs ...sdk.Msg) error {
 
 // SetSignatures implements TxBuilder.SetSignatures.
 func (s *StdTxBuilder) SetSignatures(signatures ...signing.SignatureV2) error {
-	sigs := make([]StdSignature, len(signatures))
-
+	sigs := make([]legacytx.StdSignature, len(signatures))
+	var err error
 	for i, sig := range signatures {
-		stdSig, err := SignatureV2ToStdSignature(s.cdc, sig)
+		sigs[i], err = sig.ToStdSignature(cdc)
 		if err != nil {
 			return err
 		}
-
-		sigs[i] = stdSig
 	}
 
 	s.Signatures = sigs

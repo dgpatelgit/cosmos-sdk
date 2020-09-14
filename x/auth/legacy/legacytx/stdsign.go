@@ -75,26 +75,6 @@ func StdSignatureToSignatureV2(cdc *codec.LegacyAmino, sig StdSignature) (signin
 	}, nil
 }
 
-// SignatureV2ToStdSignature converts a SignatureV2 to a StdSignature
-func SignatureV2ToStdSignature(cdc *codec.LegacyAmino, sig signing.SignatureV2) (StdSignature, error) {
-	var (
-		sigBz []byte
-		err   error
-	)
-
-	if sig.Data != nil {
-		sigBz, err = SignatureDataToAminoSignature(cdc, sig.Data)
-		if err != nil {
-			return StdSignature{}, err
-		}
-	}
-
-	return StdSignature{
-		PubKey:    sig.PubKey,
-		Signature: sigBz,
-	}, nil
-}
-
 func pubKeySigToSigData(cdc *codec.LegacyAmino, key crypto.PubKey, sig []byte) (signing.SignatureData, error) {
 	multiPK, ok := key.(multisig.PubKey)
 	if !ok {
