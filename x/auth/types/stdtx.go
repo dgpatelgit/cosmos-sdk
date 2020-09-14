@@ -3,14 +3,14 @@ package types
 import (
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/types/tx/signing"
-
 	"github.com/tendermint/tendermint/crypto"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/types/multisig"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/types/tx/signing"
+	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 )
 
 // CountSubKeys counts the total number of keys for a multi-sig public key.
@@ -30,40 +30,23 @@ func CountSubKeys(pub crypto.PubKey) int {
 
 // DefaultTxDecoder logic for standard transaction decoding
 func DefaultTxDecoder(cdc *codec.LegacyAmino) sdk.TxDecoder {
-	return func(txBytes []byte) (sdk.Tx, error) {
-		var tx = StdTx{}
-
-		if len(txBytes) == 0 {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrTxDecode, "tx bytes are empty")
-		}
-
-		// StdTx.Msg is an interface. The concrete types
-		// are registered by MakeTxCodec
-		err := cdc.UnmarshalBinaryBare(txBytes, &tx)
-		if err != nil {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrTxDecode, err.Error())
-		}
-
-		return tx, nil
-	}
+	return mkDecoder(cdc.UnmarshalBinaryBare)
 }
 
 func DefaultJSONTxDecoder(cdc *codec.LegacyAmino) sdk.TxDecoder {
-	return func(txBytes []byte) (sdk.Tx, error) {
-		var tx = StdTx{}
+	return mkDecoder(cdc.UnmarshalJSON)
+}
 
+func mkDecoder(unmarshaler sdk.Unmarshaler) sdk.TxDecoder {
+	return func(txBytes []byte) (sdk.Tx, error) {
 		if len(txBytes) == 0 {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrTxDecode, "tx bytes are empty")
 		}
-
+		var tx = legacytx.StdTx{}
 		// StdTx.Msg is an interface. The concrete types
 		// are registered by MakeTxCodec
-		err := cdc.UnmarshalJSON(txBytes, &tx)
-		if err != nil {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrTxDecode, err.Error())
-		}
-
-		return tx, nil
+		err := unmarshaler(txBytes, &tx)
+		return tx, sdkerrors.Wrap(sdkerrors.ErrTxDecode, err.Error())
 	}
 }
 
