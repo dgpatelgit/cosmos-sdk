@@ -16,6 +16,8 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&BaseAccount{}, "cosmos-sdk/BaseAccount", nil)
 	cdc.RegisterConcrete(&ModuleAccount{}, "cosmos-sdk/ModuleAccount", nil)
 	cdc.RegisterConcrete(legacytx.StdTx{}, "cosmos-sdk/StdTx", nil)
+
+	legacytx.RegisterLegacyAminoCodec(cdc)
 }
 
 // RegisterInterface associates protoName with AccountI interface
@@ -34,12 +36,6 @@ func RegisterInterfaces(registry types.InterfaceRegistry) {
 		&BaseAccount{},
 		&ModuleAccount{},
 	)
-}
-
-// RegisterKeyTypeCodec registers an external concrete type defined in
-// another module for the internal ModuleCdc.
-func RegisterKeyTypeCodec(o interface{}, name string) {
-	amino.RegisterConcrete(o, name, nil)
 }
 
 var (
