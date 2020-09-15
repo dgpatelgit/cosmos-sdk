@@ -15,7 +15,6 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterInterface((*AccountI)(nil), nil)
 	cdc.RegisterConcrete(&BaseAccount{}, "cosmos-sdk/BaseAccount", nil)
 	cdc.RegisterConcrete(&ModuleAccount{}, "cosmos-sdk/ModuleAccount", nil)
-	cdc.RegisterConcrete(legacytx.StdTx{}, "cosmos-sdk/StdTx", nil)
 
 	legacytx.RegisterLegacyAminoCodec(cdc)
 }
