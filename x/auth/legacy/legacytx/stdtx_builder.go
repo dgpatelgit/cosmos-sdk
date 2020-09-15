@@ -85,7 +85,7 @@ func (s StdTxConfig) NewTxBuilder() client.TxBuilder {
 func (s StdTxConfig) WrapTxBuilder(newTx sdk.Tx) (client.TxBuilder, error) {
 	stdTx, ok := newTx.(StdTx)
 	if !ok {
-		return nil, fmt.Errorf("expected %T, got %T", StdTx{}, newTx)
+		return nil, fmt.Errorf("wrong type, expected %T, got %T", stdTx, newTx)
 	}
 	return &StdTxBuilder{StdTx: stdTx, cdc: s.Cdc}, nil
 }
@@ -175,7 +175,10 @@ func mkDecoder(unmarshaler sdk.Unmarshaler) sdk.TxDecoder {
 		// StdTx.Msg is an interface. The concrete types
 		// are registered by MakeTxCodec
 		err := unmarshaler(txBytes, &tx)
-		return tx, sdkerrors.Wrap(sdkerrors.ErrTxDecode, err.Error())
+		if err != nil {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrTxDecode, err.Error())
+		}
+		return tx, nil
 	}
 }
 
