@@ -26,7 +26,7 @@ other cases as well.
 
 For signature verification in Cosmos SDK, signer and verifier need to agree on
 the same serialization of a SignDoc without transmitting the serialization.
-Currently, for Block signature we are using a workaround: we create a new [TxRaw](https://github.com/cosmos/cosmos-sdk/blob/9e85e81e0e8140067dd893421290c191529c148c/proto/cosmos/tx/v1beta1/tx.proto#L30)
+Currently, for transaction signature we are using a workaround: we create a new [TxRaw](https://github.com/cosmos/cosmos-sdk/blob/9e85e81e0e8140067dd893421290c191529c148c/proto/cosmos/tx/v1beta1/tx.proto#L30)
 instance (as defined in [adr-020-protobuf-transaction-encoding](https://github.com/cosmos/cosmos-sdk/blob/master/docs/architecture/adr-020-protobuf-transaction-encoding.md#transactions))
 by converting all Tx fields to bytes on the client side. This adds an additional manual
 step when sending and signing transactions.
