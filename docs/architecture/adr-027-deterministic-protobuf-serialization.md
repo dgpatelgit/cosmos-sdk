@@ -34,7 +34,7 @@ step when sending and signing transactions.
 ### Decision
 
 The following encoding scheme is proposed to be used by other ADRs.
-Currently we are using the this ADR to for `SignDoc` serialization.
+Currently we are using this ADR for `SignDoc` serialization.
 
 ## Specification
 
